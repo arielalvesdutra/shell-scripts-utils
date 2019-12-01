@@ -1,0 +1,32 @@
+#!/bin/bash
+## Variables
+backupsDir="$HOME/MEGA/backups"
+dbBackupsDir="$backupsDir/db/"
+
+## Methods
+create_backups_directory() {
+  echo "Creating directory '$backupsDir'..."
+  mkdir $backupsDir
+}
+
+create_db_backups_directory () {
+  echo "Creating directory '$dbBackupsDir'..."
+  mkdir $dbBackupsDir
+}
+
+dump_database () {
+  mysqldump -u root -h 127.0.0.1 -P 3306 --password='password' hcrpr > $dbBackupsDir/hcrpr-$(date +%d%m%Y).sql
+}
+
+## Code execution
+if [ ! -d $backupsDir ];
+then
+  create_backups_directory
+fi 
+
+if [ ! -d "$dbBackupsDir" ];
+then
+  create_db_backups_directory
+fi
+
+dump_database
