@@ -2,6 +2,7 @@
 ## Variables
 backupsDir="$HOME/MEGA/backups"
 dbBackupsDir="$backupsDir/db/"
+hcrprDir="$dbBackupsDir/hcrpr"
 
 ## Methods
 create_backups_directory() {
@@ -14,19 +15,55 @@ create_db_backups_directory () {
   mkdir $dbBackupsDir
 }
 
+create_hcrpr_directory() {
+  echo "Creating directory '$hcrprDir'..."
+  mkdir $hcrprDir
+} 
+
 dump_database () {
-  mysqldump -u root -h 127.0.0.1 -P 3306 --password='password' hcrpr > $dbBackupsDir/hcrpr-$(date +%d%m%Y).sql
+  echo "Realizando o dump do banco de dados..."
+  mysqldump -u root -h 127.0.0.1 -P 3306 --password='password' hcrpr > $hcrprDir/hcrpr-$(date +%d%m%Y).sql
+}
+
+has_file_older_than () {
+  days=$1
+  if (($(find ./ -mtime +$days | wc -l) > 0)); then
+    echo 0
+  else
+    echo 1
+  fi
+}
+
+delete_files_older_than() {
+  days=$1  
+  if (( $days < 0)); then
+    echo "O dia informádo é inválido..."
+    return
+  fi
+  if [[ $(has_file_older_than $days) == 1 ]]; then
+    echo "Não há arquivos para remover..."
+    return
+  fi
+
+  cd $hcrprDir
+  echo ">> Pasta atual:" $(pwd)
+  echo "Removendo arquivos com mais de $days dias..."
+  rm $(find ./ -mtime +$days)
 }
 
 ## Code execution
-if [ ! -d $backupsDir ];
-then
+if [ ! -d $backupsDir ]; then
   create_backups_directory
 fi 
 
-if [ ! -d "$dbBackupsDir" ];
-then
+if [ ! -d "$dbBackupsDir" ]; then
   create_db_backups_directory
 fi
 
+if [ ! -d "$hcrprDir" ]; then
+  create_hcrpr_directory
+fi
+
 dump_database
+
+delete_files_older_than 30
