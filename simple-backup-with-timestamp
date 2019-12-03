@@ -23,6 +23,7 @@ create_hcrpr_directory() {
 dump_database () {
   echo "Realizando o dump do banco de dados..."
   mysqldump -u root -h 127.0.0.1 -P 3306 --password='password' hcrpr > $hcrprDir/hcrpr-$(date +%d%m%Y).sql
+  echo "Dump realizado..."
 }
 
 has_file_older_than () {
@@ -35,6 +36,10 @@ has_file_older_than () {
 }
 
 delete_files_older_than() {
+  echo "Verificando se há harquivos para remover..."
+  cd $hcrprDir
+  echo ">> Pasta atual:" $(pwd)
+
   days=$1  
   if (( $days < 0)); then
     echo "O dia informádo é inválido..."
@@ -44,9 +49,7 @@ delete_files_older_than() {
     echo "Não há arquivos para remover..."
     return
   fi
-
-  cd $hcrprDir
-  echo ">> Pasta atual:" $(pwd)
+  
   echo "Removendo arquivos com mais de $days dias..."
   rm $(find ./ -mtime +$days)
 }
