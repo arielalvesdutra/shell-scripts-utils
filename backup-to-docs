@@ -1,0 +1,24 @@
+#!/bin/bash
+
+function backup_to_git_docks_repo() {
+  echo ">>> Iniciando o backup para a pasta de documentos do meu github..."
+  destinyDir="$HOME/Documentos/Desenvolvimento/documentacoes-e-anotacoes/java/selenium/pract"
+
+  printf ">>> Diretório destino: \n $destinyDir"
+  printf "\n \n"
+
+  if [ ! -d $destinyDir ]; then
+    echo ">> Criando o diretório $destinyDir..."
+    printf "\n"
+    mkdir -p $destinyDir
+  fi
+
+  rsync -avz --delete --exclude 'node_modules' --exclude '.git' --exclude 'backup-to-docs' ./  $destinyDir
+
+  printf "\n"
+  echo ">>> Cópia executada..."
+  echo ">>> Tchau :)"
+}
+
+
+backup_to_git_docks_repo

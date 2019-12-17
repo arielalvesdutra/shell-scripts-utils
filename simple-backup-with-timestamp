@@ -1,29 +1,18 @@
 #!/bin/bash
 ## Variables
-backupsDir="$HOME/MEGA/backups"
-dbBackupsDir="$backupsDir/db/"
-hcrprDir="$dbBackupsDir/hcrpr"
+hcrprDir="$HOME/MEGA/backups/db/hcrpr"
 
 ## Methods
-create_backups_directory() {
-  echo "Creating directory '$backupsDir'..."
-  mkdir $backupsDir
-}
 
-create_db_backups_directory () {
-  echo "Creating directory '$dbBackupsDir'..."
-  mkdir $dbBackupsDir
-}
-
-create_hcrpr_directory() {
-  echo "Creating directory '$hcrprDir'..."
-  mkdir $hcrprDir
+create_hcrpr_db_backups_directory() {
+  echo "> Criando o diretório '$hcrprDir'..."
+  mkdir -p $hcrprDir
 } 
 
 dump_database () {
-  echo "Realizando o dump do banco de dados..."
+  echo "> Realizando o dump do banco de dados..."
   mysqldump -u root -h 127.0.0.1 -P 3306 --password='password' hcrpr > $hcrprDir/hcrpr-$(date +%d%m%Y).sql
-  echo "Dump realizado..."
+  echo "> Dump realizado..."
 }
 
 has_file_older_than () {
@@ -36,37 +25,36 @@ has_file_older_than () {
 }
 
 delete_files_older_than() {
-  echo "Verificando se há harquivos para remover..."
+  echo "> Verificando se há harquivos para remover..."
   cd $hcrprDir
-  echo ">> Pasta atual:" $(pwd)
+  echo "> Pasta atual:" $(pwd)
 
   days=$1  
   if (( $days < 0)); then
-    echo "O dia informádo é inválido..."
+    echo "> O dia informádo é inválido..."
     return
   fi
   if [[ $(has_file_older_than $days) == 1 ]]; then
-    echo "Não há arquivos para remover..."
+    echo "> Não há arquivos para remover..."
     return
   fi
   
-  echo "Removendo arquivos com mais de $days dias..."
+  echo "> Removendo arquivos com mais de $days dias..."
   rm $(find ./ -mtime +$days)
 }
 
-## Code execution
-if [ ! -d $backupsDir ]; then
-  create_backups_directory
-fi 
+goodbye() {
+  echo "> Tchau :)"
+}
 
-if [ ! -d "$dbBackupsDir" ]; then
-  create_db_backups_directory
-fi
+## Code execution
 
 if [ ! -d "$hcrprDir" ]; then
-  create_hcrpr_directory
+  create_hcrpr_db_backups_directory
 fi
 
 dump_database
 
 delete_files_older_than 30
+
+goodbye
