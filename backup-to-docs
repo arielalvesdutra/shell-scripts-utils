@@ -1,11 +1,14 @@
 #!/bin/bash
 
+destinyDir="$HOME/Documentos/Desenvolvimento/documentacoes-e-anotacoes/dir"
+
 function backup_to_git_docks_repo() {
   echo ">>> Iniciando o backup para a pasta de documentos do meu github..."
-  destinyDir="$HOME/Documentos/Desenvolvimento/documentacoes-e-anotacoes/java/selenium/pract"
-
   printf ">>> Diretório destino: \n $destinyDir"
   printf "\n \n"
+
+  source_file_directory="$(dirname $0)"
+  cd $source_file_directory
 
   if [ ! -d $destinyDir ]; then
     echo ">> Criando o diretório $destinyDir..."
