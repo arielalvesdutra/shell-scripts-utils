@@ -1,9 +1,9 @@
-# Descrição
+# Description
 
-Repositório para armazenar shell scripts que possam facilitar tarefas no Linux, como a criação de comandos de atalho ou de automação.
+Repository to store shell scripts that can facilitate task on Linux, like the creation of shortcuts commands or automation.
 
-# Uso
+# Use
 
-1. Mover os arquivos para a pasta `~/.local/bin`;
-2. Fornecer permissão de execução para os arquivos com `chmod +x`;
-3. Executar o arquivo desejado em qualquer pasta utilizando o terminal.
+1. Move files to folder `~/.local/bin`;
+2. Provide file execution permission with `chmod +x`;
+3. Execute the desired file in any folder when you are using the terminal.
