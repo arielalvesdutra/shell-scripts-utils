@@ -16,7 +16,8 @@ fi
 echo "....Selected number of days is: $NUMBER_OF_DAYS"
 echo "....Selected folder: $FOLDER"
 
-ls  -la "$FOLDER"
+ls -la "$FOLDER"
 
 echo "....Removing files from folder $FOLDER with until $NUMBER_OF_DAYS days of existence"
-rm $(find $FOLDER -mtime +$NUMBER_OF_DAYS)
+
+rm $(find $FOLDER -mtime -$NUMBER_OF_DAYS)
